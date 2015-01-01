@@ -15,7 +15,7 @@ module  bearingBlock(h=33, w=45, m=45, r=10) {
     
 }
 
-module supportedLinearRail(length = 200, shaftdimension = 16, blockspacing = 10) {
+module supportedLinearRail(length = 200, shaftdimension = 16, blockspacing = 10, holedistance = 30) {
     difference() {
     union() {
         rotate([0,90,0]) cylinder(h=length, d=shaftdimension, center=true);
@@ -25,7 +25,7 @@ module supportedLinearRail(length = 200, shaftdimension = 16, blockspacing = 10)
             linear_extrude(height=length, convexity=2)
             polygon(
                 points = [
-                    [-16, -6], [-16,-3], [-8,-3], [-8,0],[-8,2],[-7,2],[-2,8], [0, 7], [2,8], [7,2], [8, 2], [8,0], [8,-3], [16, -3], [16, -6]
+                    [-18.5, -6], [-18.5,-3], [-8,-3], [-8,0],[-8,2],[-7,2],[-2,8], [0, 7], [2,8], [7,2], [8, 2], [8,0], [8,-3], [18.5, -3], [18.5, -6]
                 ],
                 paths = [
                     [0,1,2,3,4,5,6,7,8, 9,10,11,12,13,14]
@@ -33,7 +33,7 @@ module supportedLinearRail(length = 200, shaftdimension = 16, blockspacing = 10)
         
     }
     //Holes for screws along the rail
-    for (y = [-12, 12]) 
+    #for (y = [-1*holedistance/2, holedistance/2]) 
         for (x = [-length/2: 2*25.4: length/2])
             translate([x, y, -25]) cylinder(10, r=2);
     }

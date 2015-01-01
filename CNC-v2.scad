@@ -7,6 +7,7 @@ use <nema17.scad>;
 use <teeJoiningPlate.scad>;
 use <MScrew.scad>;
 use <THKKR33.scad>;
+use <TSlotProfile.scad>;
 
 inch = 25.4;
 cnc_length = 750;
@@ -21,12 +22,13 @@ zplate_depth = 10;
 $t = 0; //Reset animation
 
 module frame() {
-    mirror_copy() translate([0, cnc_width/2+inch/2, 0]) rotate([90,0,90]) 1030Profile(cnc_length);
+    //#mirror_copy() translate([0, cnc_width/2+inch/2, 0]) rotate([90,0,90]) 1030Profile(cnc_length);
     mirror_copy([1,0,0]) translate([cnc_length/2+inch/2,0,0]) rotate([90,0,0]) 1030Profile(cnc_width+2*inch);
-    mirror_copy() translate([0,-cnc_width/2-2*inch,0]) rotate([90,0,0]) supportedLinearRail(cnc_length, blockspacing=0);
+	mirror_copy() translate([0,cnc_width/2,0]) rotate([90,0,90]) TSlotProfile(series = 30, profile = 6060, length=cnc_length);
+    %mirror_copy() translate([0,-cnc_width/2-2*inch,0]) rotate([90,0,0]) supportedLinearRail(cnc_length, blockspacing=0, holedistance=30);
     
     //Feet
-    mirror_copy() mirror_copy([1,0,0]) translate([cnc_length/2+.5*inch, cnc_width/2+.5*inch, -cnc_feet+cnc_feet/2-1.5*inch]) 1010Profile(cnc_feet);
+    mirror_copy() mirror_copy([1,0,0]) translate([cnc_length/2+.5*inch, cnc_width/2, -cnc_feet+cnc_feet/2-1.5*inch]) TSlotProfile(series=30, profile=6060, length=cnc_feet);
 }
 
 module gantry() {

@@ -15,8 +15,10 @@ module TSlotProfile(series = 20, profile=2020, length=100) {
 	}
 		
 	else if (series == 30) {
-		if (profile == 3030) 30_3030(length);
-		if (profile == 3060) 30_3060(length);
+		if (profile == 3030) linear_extrude(height=length, center=true) 30_3030Profile();
+		else if (profile == 3060) linear_extrude(height=length, center=true) 30_3060Profile();
+		else if (profile == 6060) linear_extrude(height=length, center=true) 30_6060Profile();
+		else warning(str("Unknown profile in 30-series: ", profile));
 	}
 	else {
 		warning(str("Unknown series: ", series));
@@ -27,32 +29,89 @@ module TSlotProfile(series = 20, profile=2020, length=100) {
 
 module 30_3030Profile($fn=32) {
 	radius = 1;
-	//#translate([0,0,-10]) square([30,30], center=true);
 	difference() {
 		hull() {
 			for (i = [0:360/4: 359]) 
 				rotate(i) translate([30/2, 30/2, 0]) circle(radius);
 		}
-		for (i = [0:360/4: 359]) 
+		for (i = [0:360/4: 359])  {
 			rotate(i) translate([0,11.67/2,0]) 30seriesTslot();
+			rotate(i) translate([11.67, 11.67, 0]) 30seriesCornerhole();
+		}
 		
-		circle(3);
-		rotate(45) roundedSquare(7, .8);
-		rotate(-45) roundedSquare(7, .8);
+		30seriesCenterhole();
 	}	
 }
 
 module 30seriesTslot() {
-	translate([0,0,0]) hull() {
-		translate([0,6.8-1.5,0]) square([16.5, 2], center=true);
-		square([8.13, .001], center=true);
+	slotopening = 8.13;
+	hull() {
+		translate([0,6.8-1,0]) square([16.5, 4], center=true);
+		square([slotopening, 1], center=true);
 	}
-	translate([0,7,0]) square([8.13, 10], center=true);
-	translate([0,.3,0]) rotate(45) square(1, center=true);
+	translate([0,7,0]) square([slotopening, 10], center=true);
+	translate([0,-.3,0]) rotate(45) square(1, center=true);
+}
+
+module 30seriesCenterhole() {
+	circle(3);
+	rotate(45) roundedSquare(7, .8);
+	rotate(-45) roundedSquare(7, .8);
+}
+
+module 30seriesCornerhole() {
+	rotate(45+90) hull() {
+		translate([0,-4.2/2+.7,0]) circle(1);
+		for (i = [0:2])
+			rotate(i*90) translate([4.2/2,0,0]) rotate(45) square(1, center=true);
+	}
 }
 
 module 30_3060Profile() {
-	square([30, 60], center=true);
+	radius = 1;
+	difference() {
+		hull() {
+			translate([30/2, 60/2, 0]) circle(radius);
+			translate([30/2, -60/2, 0]) circle(radius);
+			translate([-30/2, 60/2, 0]) circle(radius);
+			translate([-30/2, -60/2, 0]) circle(radius);
+		}
+		for (y = [-1,1])  {
+			translate([0,y*60/4,0]) for (i = [0:360/4: 359])  {
+				rotate(i) translate([0,11.67/2,0]) 30seriesTslot();
+				rotate(i) translate([11.67, 11.67, 0]) 30seriesCornerhole();
+				
+			}
+			translate([0,y*15,0]) 30seriesCenterhole();
+		}
+		square([30-3,11], center=true);		
+	}
+}
+
+module 30_6060Profile() {
+	radius = 1;
+	difference() {
+		hull() {
+			translate([60/2, 60/2, 0]) circle(radius);
+			translate([60/2, -60/2, 0]) circle(radius);
+			translate([-60/2, 60/2, 0]) circle(radius);
+			translate([-60/2, -60/2, 0]) circle(radius);
+		}
+		for (y = [-1,1])  {
+			for (x = [-1,1]) {
+				translate([x*60/4,y*60/4,0]) for (i = [0:360/4: 359])  {
+					rotate(i) translate([0,11.67/2,0]) 30seriesTslot();
+					rotate(i) translate([11.67, 11.67, 0]) 30seriesCornerhole();
+					
+				}
+				translate([x*15,y*15,0]) 30seriesCenterhole();
+			}
+		}
+		square([60-3,11], center=true);		
+		rotate(90) square([60-3,11], center=true);		
+		square([30,19.5], center=true);
+		square([19.5,30], center=true);
+	}
 }
 
 module profile2D(x, y) {
@@ -146,16 +205,17 @@ module 20_2040(length) {
 	linear_extrude(height=length, center=true) profile2D(20, 40);
 }
 
+/*
 module 30_3030(length) {
 	echo("BOM: 30-3030");
 	linear_extrude(height=length, center=true) 30_3030Profile();
 }
-
+*/
 module 30_3060(length) {
 	linear_extrude(height=length, center=true) 30_3060Profile();
 }
 
-TSlotProfile(series = 20, profile = 2020, length=10);
-translate([30,0,0]) TSlotProfile(series = 30, profile = 3030, length=10);
-translate([70,0,0]) TSlotProfile(series = 30, profile = 3060, length = 10);
-
+TSlotProfile(series = 20, profile = 2020, length=150);
+translate([30,0,0]) TSlotProfile(series = 30, profile = 3030, length=100); 
+translate([70,0,0]) TSlotProfile(series = 30, profile = 3060, length = 100);
+translate([0,70,0]) TSlotProfile(series = 30, profile = 6060, length = 100);
