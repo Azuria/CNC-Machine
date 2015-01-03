@@ -1,5 +1,8 @@
 //T-slots from 8020
 //By Frode Lillerud
+
+use <TSlot_Fractional.scad>;
+
 $fn=32;
 module warning(message) {
 	echo(str("<span style='background-color: yellow;'>WARNING: " , message, "</span>"));
@@ -7,7 +10,11 @@ module warning(message) {
 
 module TSlotProfile(series = 20, profile=2020, length=100) {
 	//echo(str("series = ", series));
-	if (series == 20) {
+	if (series == 10) {
+		if (profile == 2020) 2020Profile(length); //Temporarily use different class here.
+		else if (profile == 1030) 1030Profile(length);
+	}
+	else if (series == 20) {
 		if (profile == 2020) 20_2020(length);
 	 	if (profile == 2040) 20_2040(length);
 	}
@@ -23,6 +30,11 @@ module TSlotProfile(series = 20, profile=2020, length=100) {
 	else {
 		warning(str("Unknown series: ", series));
 	}
+}
+
+// 10-series
+
+module 10_2020Profile() {
 }
 
 // 30-series
@@ -215,7 +227,9 @@ module 30_3060(length) {
 	linear_extrude(height=length, center=true) 30_3060Profile();
 }
 
-TSlotProfile(series = 20, profile = 2020, length=150);
-translate([30,0,0]) TSlotProfile(series = 30, profile = 3030, length=100); 
-translate([70,0,0]) TSlotProfile(series = 30, profile = 3060, length = 100);
-translate([0,70,0]) TSlotProfile(series = 30, profile = 6060, length = 100);
+TSlotProfile(series = 20, profile = 2020, length=30);
+translate([30,0,0]) TSlotProfile(series = 30, profile = 3030, length=30); 
+translate([70,0,0]) TSlotProfile(series = 30, profile = 3060, length = 30);
+translate([0,70,0]) TSlotProfile(series = 30, profile = 6060, length = 60);
+translate([70,70,0]) TSlotProfile(series = 10, profile = 2020, length = 60);
+translate([130,0,0]) TSlotProfile(series = 10, profile = 1030, length = 90);

@@ -1,4 +1,4 @@
-use <TSlot_Fractional.scad>;
+use <EightyTwentyParts.scad>;
 use <Library.scad>;
 use <supportedLinearRail.scad>;
 use <ballscrew.scad>;
@@ -8,12 +8,19 @@ use <teeJoiningPlate.scad>;
 use <MScrew.scad>;
 use <THKKR33.scad>;
 use <TSlotProfile.scad>;
+use <tnutz.scad>;
+use <gantrySide.scad>;
+use <squareLinearRail.scad>;
 
 inch = 25.4;
-cnc_length = 750;
+cnc_length = 900;
 cnc_width = 450-5*inch;
-cnc_height = 300;
-cnc_feet = 70;
+cnc_height = 250;
+cnc_feet = 100;
+
+gantry_topoffset = -50;
+gantry_bottomwidth = 150;
+gantry_width = 15;
 
 zplate_width = 100;
 zplate_height = 150;
@@ -22,29 +29,46 @@ zplate_depth = 10;
 $t = 0; //Reset animation
 
 module frame() {
-    //#mirror_copy() translate([0, cnc_width/2+inch/2, 0]) rotate([90,0,90]) 1030Profile(cnc_length);
-    mirror_copy([1,0,0]) translate([cnc_length/2+inch/2,0,0]) rotate([90,0,0]) 1030Profile(cnc_width+2*inch);
+    //Ends
+	mirror_copy([1,0,0]) translate([cnc_length/2-15,0,0]) rotate([90,0,0]) TSlotProfile(series=30,profile=3060, length=cnc_width-60);
+	//Middle
+	rotate([90,0,0]) TSlotProfile(series=30,profile=3060, length=cnc_width-60);
+	//Sides
 	mirror_copy() translate([0,cnc_width/2,0]) rotate([90,0,90]) TSlotProfile(series = 30, profile = 6060, length=cnc_length);
-    %mirror_copy() translate([0,-cnc_width/2-2*inch,0]) rotate([90,0,0]) supportedLinearRail(cnc_length, blockspacing=0, holedistance=30);
+	
+	//Rails
+    mirror_copy() translate([0,-cnc_width/2-2*inch,0]) rotate([90,0,0]) supportedLinearRail(cnc_length, blockspacing=60, holedistance=30);
+	//squareLinearRail(length=500, blockspacing = 50);
     
     //Feet
-    mirror_copy() mirror_copy([1,0,0]) translate([cnc_length/2+.5*inch, cnc_width/2, -cnc_feet+cnc_feet/2-1.5*inch]) TSlotProfile(series=30, profile=6060, length=cnc_feet);
+    mirror_copy() mirror_copy([1,0,0]) translate([cnc_length/2-30, cnc_width/2, -cnc_feet+cnc_feet/2-30]) TSlotProfile(series=30, profile=6060, length=cnc_feet);
+	
+	//Brackets
+	%mirror_copy() translate([cnc_length/2,-cnc_width/2+15,-15]) rotate([0,90,0]) JoiningPlate30_4351();
 }
 
 module gantry() {
-    translate([0,0,-3*inch]) rotate([90,90,0]) 1030Profile(cnc_width+2*inch+3*inch);
-    mirror_copy() translate([0,cnc_width/2+3*inch,cnc_height/2-3.5*inch]) rotate([0,0,90]) 1030Profile(cnc_height);
-    translate([-1*inch,0,cnc_height/2]) rotate([90,0,0]) 1030Profile(cnc_width+5*inch);
+	//Top
+	translate([gantry_topoffset-30,0,cnc_height-30]) rotate([90,90,0]) TSlotProfile(series = 30, profile = 3060, length=cnc_width+5*inch);
+	
+	//Sidewalls
+	mirror_copy() translate([-gantry_bottomwidth/2,cnc_width/2+83, -15]) rotate([90,0,0]) gantrySide(height=cnc_height, topoffset=gantry_topoffset, bottomwidth=gantry_bottomwidth, bottomheight=50, width=gantry_width);
+	
+	//Bottom
+    translate([0,0,-60]) rotate([90,90,0]) TSlotProfile(series = 10, profile = 1030, length=cnc_width+2*inch+3*inch);
     
-    mirror_copy() translate([0,-cnc_width/2-3.5*inch,-3.7*inch]) rotate([0,0,90]) teeJoiningPlate();
-    translate([0,-cnc_width/2-2*inch,-3.9*inch]) color("black") screw("M5", "cap", 10);
+	//mirror_copy() translate([0,cnc_width/2+3*inch,cnc_height/2-3.5*inch]) rotate([0,0,90]) TSlotProfile(series = 10, profile = 1030, length=cnc_height);
+    
+    
+    //mirror_copy() translate([0,-cnc_width/2-3.5*inch,-3.7*inch]) rotate([0,0,90]) teeJoiningPlate();
+    //translate([0,-cnc_width/2-2*inch,-3.9*inch]) color("black") screw("M5", "cap", 10);
 }
 
 module actuators() {
     //Y-axis
-    translate([0,0,-1.5*inch]) rotate([180,0,0]) ballscrewAndMotor(cnc_length);
+    translate([0,0,-55]) rotate([0,180,0]) ballscrewAndMotor(cnc_length);
     //X-axis
-    translate([inch/2,0,cnc_height/2]) rotate([270,0,270]) ballscrewAndMotor(cnc_width+5*inch);
+    translate([gantry_topoffset,0,cnc_height/1.5]) rotate([270,0,270]) ballscrewAndMotor(cnc_width+5*inch);
 
 }
 
@@ -55,7 +79,7 @@ module zaxis() {
 }
 
 module tabletop () {
-    translate([0,0,2*inch-6]) cube([cnc_length+2*inch,cnc_width+2*inch, 10], center=true);
+    translate([0,0,2*inch-6]) cube([cnc_length,cnc_width+2*inch, 10], center=true);
 }
 
 module ballscrewAndMotor(length) {
@@ -67,8 +91,8 @@ module ballscrewAndMotor(length) {
     }
 }
 
-gantry();
-zaxis();
+translate([0,0,-10]) gantry();
+//zaxis();
 frame();
 %tabletop();
 actuators();
