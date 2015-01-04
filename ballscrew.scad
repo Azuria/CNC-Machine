@@ -19,7 +19,7 @@ module ballscrew_nut(nut_diameter = 16) {
                         cube([40,100,10], center=true);
                         cylinder(d=48,h=10,center=true);
                     }
-                    #cylinder(d=nut_diameter, h=11, center=true);
+                    cylinder(d=nut_diameter, h=11, center=true);
                 }
             
                 union() {
@@ -39,13 +39,13 @@ module ballscrew_nut(nut_diameter = 16) {
     translate([0,0,23]) rotate([0,90,90]) ballnutMount();
 }
 
-module ballscrew(rod_length=100, rod_diameter=8) {   
+module ballscrew(rod_length=100, rod_diameter=8, nut_offset=0, nut_rotate=0) {   
     color("lightgrey")
         rotate([$t*360,0,0]) ballscrew_rod(rod_length, rod_diameter);
     color("lightgrey")
-        translate([$t*rod_length/2,0,0]) rotate([90,0,90]) ballscrew_nut(rod_diameter);
+        translate([$t*rod_length/2+nut_offset,0,0]) rotate([90,0+nut_rotate,90]) ballscrew_nut(rod_diameter);
     translate([rod_length/2-10, 0, -4]) ballscrewMount();
     translate([-rod_length/2+10, 0, -4]) ballscrewMount();
 }
 
-ballscrew(rod_length=300, rod_diameter=10);
+ballscrew(rod_length=300, rod_diameter=10, nut_offset=-60, nut_rotate=350);

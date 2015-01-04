@@ -33,7 +33,7 @@ module supportedLinearRail(length = 200, shaftdimension = 16, blockspacing = 10,
         
     }
     //Holes for screws along the rail
-    #for (y = [-1*holedistance/2, holedistance/2]) 
+    for (y = [-1*holedistance/2, holedistance/2]) 
         for (x = [-length/2: 2*25.4: length/2])
             translate([x, y, -25]) cylinder(10, r=2);
     }

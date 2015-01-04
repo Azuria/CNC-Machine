@@ -3,18 +3,19 @@ use <Library.scad>;
 use <supportedLinearRail.scad>;
 use <ballscrew.scad>;
 use <shaftCoupler.scad>;
-use <nema17.scad>;
+use <nema.scad>;
 use <teeJoiningPlate.scad>;
 use <MScrew.scad>;
 use <THKKR33.scad>;
 use <TSlotProfile.scad>;
 use <tnutz.scad>;
 use <gantrySide.scad>;
+use <gantryBottomPlate.scad>;
 use <squareLinearRail.scad>;
 
 inch = 25.4;
 cnc_length = 900;
-cnc_width = 450-5*inch;
+cnc_width = 400;
 cnc_height = 250;
 cnc_feet = 100;
 
@@ -52,10 +53,11 @@ module gantry() {
 	translate([gantry_topoffset-30,0,cnc_height-30]) rotate([90,90,0]) TSlotProfile(series = 30, profile = 3060, length=cnc_width+5*inch);
 	
 	//Sidewalls
-	mirror_copy() translate([-gantry_bottomwidth/2,cnc_width/2+83, -15]) rotate([90,0,0]) gantrySide(height=cnc_height, topoffset=gantry_topoffset, bottomwidth=gantry_bottomwidth, bottomheight=50, width=gantry_width);
+	%mirror_copy() translate([-gantry_bottomwidth/2,cnc_width/2+83, -15]) rotate([90,0,0]) gantrySide(height=cnc_height, topoffset=gantry_topoffset, bottomwidth=gantry_bottomwidth, bottomheight=50, width=gantry_width);
 	
 	//Bottom
-    translate([0,0,-60]) rotate([90,90,0]) TSlotProfile(series = 10, profile = 1030, length=cnc_width+2*inch+3*inch);
+    //translate([-45,0,-80]) rotate([90,90,0]) TSlotProfile(series = 30, profile = 3060, length=cnc_width+2*inch+3*inch);
+	translate([-45,0,-72.5]) gantryBottomPlate(cnc_width+136);
     
 	//mirror_copy() translate([0,cnc_width/2+3*inch,cnc_height/2-3.5*inch]) rotate([0,0,90]) TSlotProfile(series = 10, profile = 1030, length=cnc_height);
     
@@ -68,7 +70,7 @@ module actuators() {
     //Y-axis
     translate([0,0,-55]) rotate([0,180,0]) ballscrewAndMotor(cnc_length);
     //X-axis
-    translate([gantry_topoffset,0,cnc_height/1.5]) rotate([270,0,270]) ballscrewAndMotor(cnc_width+5*inch);
+    %translate([gantry_topoffset-18,0,cnc_height/1.5]) rotate([180,0,270]) ballscrewAndMotor(cnc_width+5*inch, nut_rotate=270);
 
 }
 
@@ -79,14 +81,14 @@ module zaxis() {
 }
 
 module tabletop () {
-    translate([0,0,2*inch-6]) cube([cnc_length,cnc_width+2*inch, 10], center=true);
+    translate([0,0,40]) cube([cnc_length,cnc_width+130, 10], center=true);
 }
 
-module ballscrewAndMotor(length) {
-    ballscrew(length);
+module ballscrewAndMotor(length, nut_rotate=0) {
+    ballscrew(length, nut_offset=22, nut_rotate=nut_rotate);
     translate([length/2+3*inch,0,0]) rotate([0,270,0]) 
     union() {
-        nema17();
+        translate([0,0,-65]) nema23();
         translate([0,0,70]) shaftCoupler();
     }
 }

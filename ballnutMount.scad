@@ -2,7 +2,7 @@
 use <mirror_copy.scad>;
 
 
-module ballnutMount(height=40, width=48, depth=35, screwhole=4.8, hole=28.1, guidehole=17) {
+module ballnutMount(height=40, width=48, depth=35, screwhole=4.9, hole=28.1, guidehole=17) {
     difference() {
         cube([depth, width, height], center=true);
     
