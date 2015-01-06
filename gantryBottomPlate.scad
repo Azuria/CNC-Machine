@@ -1,4 +1,4 @@
-use <mirror_copy.scad>;
+use <Library.scad>;
 
 module gantryBottomPlate(length=100, width=50, thickness=15) {
 	

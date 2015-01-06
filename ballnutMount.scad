@@ -1,5 +1,5 @@
 //Ball nut mount for ballscrew
-use <mirror_copy.scad>;
+use <Library.scad>;
 
 
 module ballnutMount(height=40, width=48, depth=35, screwhole=4.9, hole=28.1, guidehole=17) {

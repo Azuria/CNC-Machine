@@ -10,7 +10,7 @@ echo (p);
 polygon(p);
 */
 
-use <mirror_copy.scad>;
+use <Library.scad>;
 
 module teeJoiningPlate() {
     inch = 25.4;

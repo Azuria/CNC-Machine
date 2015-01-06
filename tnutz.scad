@@ -1,7 +1,7 @@
 //Items from tnutz.com
 //Frode Lillerud, january 2015
 
-use <mirror_copy.scad>;
+use <Library.scad>;
 
 inch = 25.4;
 

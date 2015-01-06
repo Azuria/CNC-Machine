@@ -1,6 +1,7 @@
 inch = 25.4;
 
 module JoiningPlate30_4351() {
+	translate([0,0,-2])
 	linear_extrude(height=4)
 	difference() {
 		square(90, center=true);
