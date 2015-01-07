@@ -39,3 +39,5 @@ gantry_topoffset = -50;
 gantry_bottomwidth = 150;
 cnc_height = 250;
 gantrySide(height=cnc_height, topoffset=gantry_topoffset, bottomwidth=gantry_bottomwidth, bottomheight=50);
+
+//translate([50, 90, 0]) square([200,330], center=true);
