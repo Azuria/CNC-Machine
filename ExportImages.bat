@@ -9,3 +9,4 @@ rem "%PROGRAMFILES%\OpenSCAD\Openscad.com" -o images\cnc-v2-2.png --imgsize=4096
 "%PROGRAMFILES%\OpenSCAD\Openscad.com" -o images\gantryside.png --imgsize=4096,4096 --camera=80,90,-23,356,40,0,500 --autocenter -D $fn=100 gantrySide.scad
 rem "%PROGRAMFILES%\OpenSCAD\Openscad.com" -o images\cube-4096.png --imgsize=8192,8192 -D $fn=100 cube.scad
 "%PROGRAMFILES%\OpenSCAD\Openscad.com" -o images\tslotprofile.png --imgsize=4096,4096 --camera=56,31,0,55,0,324,200 --autocenter -D $fn=100 tslotprofile.scad
+"%PROGRAMFILES%\OpenSCAD\Openscad.com" -o images\zaxis.png --imgsize=4096,4096 --camera=0,16,60,70,0,37,550 --viewall -D $fn=30 zaxis.scad

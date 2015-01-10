@@ -13,6 +13,7 @@ use <tnutz.scad>;
 use <gantrySide.scad>;
 use <gantryBottomPlate.scad>;
 use <squareLinearRail.scad>;
+use <zaxis.scad>;
 
 inch = 25.4;
 cnc_length = 900;
@@ -67,8 +68,8 @@ module gantry() {
 	//Linear rails on top
 	//translate([gantry_topoffset+11,0,cnc_height-30]) rotate([90,0,90]) squareLinearRail(cnc_width+5*inch);
 	//translate([gantry_topoffset+11,0,cnc_height-130]) rotate([90,0,90]) squareLinearRail(cnc_width+5*inch);
-	translate([gantry_topoffset+38,0,cnc_height-45]) rotate([90,0,90]) supportedLinearRail(cnc_width+5*inch, blockspacing=50);
-	translate([gantry_topoffset+38,0,cnc_height-45-60]) rotate([90,0,90]) supportedLinearRail(cnc_width+5*inch, blockspacing=50);
+	translate([gantry_topoffset+38,0,cnc_height-45]) rotate([90,0,90]) supportedLinearRail(cnc_width+5*inch, blockspacing=10);
+	translate([gantry_topoffset+38,0,cnc_height-45-60]) rotate([90,0,90]) supportedLinearRail(cnc_width+5*inch, blockspacing=10);
 	
 	//Sidewalls
 	%mirror_copy() translate([-gantry_bottomwidth/2,cnc_width/2+83, -15]) rotate([90,0,0]) gantrySide(height=cnc_height, topoffset=gantry_topoffset, topwidth=gantry_topwidth, bottomwidth=gantry_bottomwidth, bottomheight=50, width=gantry_width);
@@ -86,6 +87,7 @@ module gantry() {
     //translate([0,-cnc_width/2-2*inch,-3.9*inch]) color("black") screw("M5", "cap", 10);
 }
 
+/*
 module zaxis() {
     translate([gantry_topoffset+20, 0, cnc_height-5*inch]) cube([zplate_thickness, zplate_width, zplate_height], center=true);
     //Z-axis
@@ -96,6 +98,7 @@ module zaxis() {
 	//Linear rails
 	mirror_copy() translate([gantry_topoffset+46,50,cnc_height-5*inch]) rotate([0,90,0]) supportedLinearRail(length=zplate_height, blockspacing=20);
 }
+*/
 
 module tabletop () {
     translate([0,0,40]) cube([cnc_length,cnc_width+130, 10], center=true);
@@ -112,7 +115,7 @@ module ballscrewAndMotor(length, nut_offset=0, nut_rotate=0) {
 }
 
 translate([0,0,-10]) gantry();
-translate([40,0,88]) zaxis();
+translate([-10,0,cnc_height-30]) zaxis();
 frame();
 %tabletop();
 
